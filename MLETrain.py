@@ -31,8 +31,8 @@ def get_word_and_tag(token):
     return token[:k], token[k + 1:]
 
 def getE(w,t):
-    if (singles[(t)]!=0):
-        return e_mle[(w,t)]/singles[(t)]
+    if (singles[(t,)]!=0):
+        return e_mle[(w,t)]/singles[(t,)]
     else:
         #return 0
         return random.uniform(0, 1)
@@ -63,6 +63,7 @@ def initialize_dicts_from_file(e_mle_file, q_mle_file):
             if line == "":
                 continue
             key, value = line.split("\t")
+            value = int(value)
             word, tag = key.split(" ")
             e_mle[(word, tag)] = value
 
@@ -73,6 +74,7 @@ def initialize_dicts_from_file(e_mle_file, q_mle_file):
             if line == "":
                 continue
             key, value = line.split("\t")
+            value = int(value)
             tags = tuple(key.split(" "))
             if len(tags) == 1:
                 singles[tags] = value

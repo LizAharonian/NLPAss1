@@ -7,11 +7,12 @@ def get_top_tag(w,one_prev,two_prev):
     final_t = None
     for t in mle.singles:
         # calculate q
+        t = t[0]
         temp_score = mle.getE(w,t) * mle.getQ(t,one_prev,two_prev)
         if temp_score > max_score:
             max_score = temp_score
             final_t = t
-    return final_t
+    return "NN"
 
 def greedy_algo():
     output_file = open(out_file_name,'w')
@@ -23,16 +24,16 @@ def greedy_algo():
             two_prev = None
             words_list = line.strip('\n').strip().split(" ")
             for word in words_list:
-                try:
-                    tag = get_top_tag(word, one_prev, two_prev)
-                    words_and_tags.append((word,tag))
-                    # swap and update params
-                    temp = one_prev
-                    one_prev = tag
-                    two_prev = temp
-
-                except Exception:
-                    continue
+                #try:
+                tag = get_top_tag(word, one_prev, two_prev)
+                words_and_tags.append((word,tag))
+                # swap and update params
+                temp = one_prev
+                one_prev = tag
+                two_prev = temp
+            write_line_to_file(output_file, words_and_tags)
+                #except Exception:
+                    #continue
     output_file.close()
 
 
@@ -50,5 +51,8 @@ q_file = argv[1]
 e_file = argv[2]
 out_file_name = argv[3]
 extra_file_name = argv[4]
+mle.initialize_dicts_from_file(e_file, q_file)
+greedy_algo()
+
 
 

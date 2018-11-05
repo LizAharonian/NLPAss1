@@ -25,13 +25,14 @@ def get_word_and_tag(token):
     return token[:k], token[k + 1:]
 
 def getE(w,t):
+    #todo:q4 yoav
     if (singles[(t)]!=0):
         return e_mle[(w,t)]/singles[(t)]
     else:
-        return 0
+        return 0.2
 
 def getQ(t1,t2,t3):
-    return 5
+    return 0.4
     #todo: q3 yoav
     return GAMA1 * (triplets[(t1,t2,t3)]/ pairs[(t1,t2)]) + GAMA2 * (pairs[(t2,t3)]/singles[(t2,)]) + GAMA3 * (singles[(t3,)]/counter_words)
 

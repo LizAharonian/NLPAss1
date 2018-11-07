@@ -4,15 +4,17 @@ import MLETrain as mle
 
 def get_top_tag(w,one_prev,two_prev):
     max_score = 0
-    final_t = None
+    max_t = None
     for t in mle.singles:
         # calculate q
         t = t[0]
-        temp_score = mle.getE(w,t) * mle.getQ(t,one_prev,two_prev)
+        q = mle.getQ(two_prev,one_prev,t)
+        #e = mle.getE(w,t)
+        temp_score =  q
         if temp_score > max_score:
             max_score = temp_score
-            final_t = t
-    return "NN"
+            max_t = t
+    return max_t
 
 def greedy_algo():
     output_file = open(out_file_name,'w')
@@ -20,8 +22,8 @@ def greedy_algo():
         content = input_file.readlines()
         for line in content:
             words_and_tags = []
-            one_prev = None
-            two_prev = None
+            one_prev = 'STR'
+            two_prev = 'STR'
             words_list = line.strip('\n').strip().split(" ")
             for word in words_list:
                 #try:

@@ -2,9 +2,9 @@ import sys
 import random
 from collections import Counter
 
-GAMA1 = 0.5
-GAMA2 = 0.25
-GAMA3 = 0.25
+lambda_1 = 0.5
+lambda_2 = 0.25
+lambda_3 = 0.25
 
 e_mle = Counter()
 singles = Counter()
@@ -38,9 +38,23 @@ def getE(w,t):
         return random.uniform(0, 1)
 
 def getQ(t1,t2,t3):
-    return random.uniform(0, 1)
-    #todo: q3 yoav
-    return GAMA1 * (triplets[(t1,t2,t3)]/ pairs[(t1,t2)]) + GAMA2 * (pairs[(t2,t3)]/singles[(t2,)]) + GAMA3 * (singles[(t3,)] / words_counter)
+    #t1 = a, t2 = b, t3 = c
+    print singles
+    first_prob = 0
+    sec_prob = 0
+    third_prob = 0
+    if pairs[(t1,t2)] > 0:
+        first_prob = lambda_1 * (triplets[(t1, t2, t3)] / pairs[(t1, t2)])
+
+    if singles[(t2,)] > 0:
+        sec_prob = lambda_2 * (pairs[(t2, t3)] / singles[(t2,)])
+
+    if words_counter > 0:
+        third_prob = lambda_3 * (singles[(t3,)] / words_counter)
+
+    return  first_prob + sec_prob + third_prob
+
+
 
 def initialize_dicts_from_file(e_mle_file, q_mle_file):
     global e_mle
@@ -51,6 +65,8 @@ def initialize_dicts_from_file(e_mle_file, q_mle_file):
     pairs = Counter()
     global riplets
     triplets = Counter()
+    global words_counter
+    words_counter = 0
     # e_mle = Counter()
     # singles = Counter()
     # pairs = Counter()
@@ -64,6 +80,7 @@ def initialize_dicts_from_file(e_mle_file, q_mle_file):
                 continue
             key, value = line.split("\t")
             value = int(value)
+            words_counter += value
             word, tag = key.split(" ")
             e_mle[(word, tag)] = value
 
@@ -99,14 +116,15 @@ def main(argv):
     global riplets
     triplets = Counter()
 
-    one_prev = None
-    two_prev = None
 
     with open(input_file_name, 'r') as input_file:
         content = input_file.readlines()
         global lala
         lala = 0
         for line in content:
+            one_prev = 'STR'
+            two_prev = 'STR'
+
             token_list = line.strip('\n').strip().split(" ")
             for token in token_list:
                 try:
@@ -116,10 +134,8 @@ def main(argv):
                     e_mle[(w,tag)] +=1
                     # fill q_mle
                     singles[(tag,)] += 1
-                    if one_prev != None:
-                        pairs[(one_prev, tag)] += 1
-                    if two_prev != None:
-                        triplets[(two_prev, one_prev, tag)] += 1
+                    pairs[(one_prev, tag)] += 1
+                    triplets[(two_prev, one_prev, tag)] += 1
                     # swap and update params
                     temp = one_prev
                     one_prev = tag
@@ -127,8 +143,6 @@ def main(argv):
 
                 except Exception:
                     continue
-            one_prev = None
-            two_prev = None
 
     write_q_mle_to_file(singles,pairs,triplets,q_file)
     write_e_mle_to_file(e_mle,e_file)

@@ -32,25 +32,24 @@ def get_word_and_tag(token):
 
 def getE(w,t):
     if (singles[(t,)]!=0):
-        return e_mle[(w,t)]/singles[(t,)]
+        return float(e_mle[(w,t)])/singles[(t,)]
     else:
         #return 0
         return random.uniform(0, 1)
 
 def getQ(t1,t2,t3):
     #t1 = a, t2 = b, t3 = c
-    print singles
     first_prob = 0
     sec_prob = 0
     third_prob = 0
     if pairs[(t1,t2)] > 0:
-        first_prob = lambda_1 * (triplets[(t1, t2, t3)] / pairs[(t1, t2)])
+        first_prob = lambda_1 * (float(triplets[(t1, t2, t3)]) / pairs[(t1, t2)])
 
     if singles[(t2,)] > 0:
-        sec_prob = lambda_2 * (pairs[(t2, t3)] / singles[(t2,)])
+        sec_prob = lambda_2 * (float(pairs[(t2, t3)]) / singles[(t2,)])
 
     if words_counter > 0:
-        third_prob = lambda_3 * (singles[(t3,)] / words_counter)
+        third_prob = lambda_3 * (float(singles[(t3,)]) / words_counter)
 
     return  first_prob + sec_prob + third_prob
 

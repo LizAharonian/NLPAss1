@@ -4,13 +4,13 @@ import MLETrain as mle
 
 def get_top_tag(w,one_prev,two_prev):
     max_score = 0
-    max_t = None
+    max_t = mle.singles.keys()[0][0]
     for t in mle.singles:
         # calculate q
         t = t[0]
         q = mle.getQ(two_prev,one_prev,t)
-        #e = mle.getE(w,t)
-        temp_score =  q
+        e = mle.getE(w,t)
+        temp_score =  q * e
         if temp_score > max_score:
             max_score = temp_score
             max_t = t
